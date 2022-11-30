@@ -741,7 +741,7 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
 
   // Remove the existing webview to reset any state
   [self.webView removeFromSuperview];
-  _webView = [self createNewWebView];
+  _webView = [self createNewWebViewAllowsInlineMediaPlayback: [[playerVars objectForKey:@"playsinline"] boolValue]];
   [self addSubview:self.webView];
 
   NSError *error = nil;
@@ -903,9 +903,15 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
   _webView = webView;
 }
 
-- (WKWebView *)createNewWebView {
+/**
+ * Creates a web view configured for inline or fullscreen playback
+ *
+ * @param allowsInlineMediaPlayback inline (1) or fullscreen (0 or null) playback
+ * @return WKWebView
+ */
+- (WKWebView *)createNewWebViewAllowsInlineMediaPlayback :(Boolean *)allowsInlineMediaPlayback {
   WKWebViewConfiguration *webViewConfiguration = [[WKWebViewConfiguration alloc] init];
-  webViewConfiguration.allowsInlineMediaPlayback = YES;
+  webViewConfiguration.allowsInlineMediaPlayback = allowsInlineMediaPlayback;
   webViewConfiguration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
   WKWebView *webView = [[WKWebView alloc] initWithFrame:self.bounds
                                           configuration:webViewConfiguration];
